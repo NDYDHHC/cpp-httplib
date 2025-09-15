@@ -3653,6 +3653,13 @@ void performance_test(const char *host) {
 
   Client cli(host, port);
 
+  // Prewarm the server
+  for (int i = 0; i < 10; i++) {
+    auto res = cli.Get("/benchmark");
+    ASSERT_TRUE(res);
+    EXPECT_EQ(StatusCode::OK_200, res->status);
+  }
+
   auto start = std::chrono::high_resolution_clock::now();
 
   auto res = cli.Get("/benchmark");
